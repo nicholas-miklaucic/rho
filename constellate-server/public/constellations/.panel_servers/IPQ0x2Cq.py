@@ -11,7 +11,6 @@ import hsluv
 
 IS_DARK = True
 theme, cs = rho.mpl_setup(IS_DARK)
-plt.style.use(theme)
 sns.palplot(cs)
 #constellate: setup_panel
 
