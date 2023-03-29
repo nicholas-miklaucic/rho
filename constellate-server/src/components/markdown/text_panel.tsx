@@ -22,6 +22,7 @@ import {
     EuiPanel,
     EuiFlexGroup,
     EuiFlexItem,
+    EuiCode,
     getDefaultEuiMarkdownParsingPlugins,
     getDefaultEuiMarkdownProcessingPlugins,
 } from "@elastic/eui";
@@ -29,9 +30,9 @@ import remarkFootnotes from "remark-footnotes";
 import remarkSmartypants from "remark-smartypants";
 import remarkNumberedFootnoteLabels from "remark-numbered-footnote-labels";
 import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm";
 import rehypeStringify from "rehype-stringify";
-import React from "react";
+import { React, useEffect } from "react";
+import renderFootnoteBlock from "./footnotes_collapse";
 
 import { KatexRenderer, MathMarkdownParser } from "./math";
 
@@ -56,11 +57,9 @@ const parsingList = getDefaultEuiMarkdownParsingPlugins();
 // remove remark-breaks: this matches standard Markdown syntax
 parsingList.splice(3, 1);
 
+// parsingList.splice(1, 0, [remarkGfm, {}]);
 parsingList.push([MathMarkdownParser, { singleDollar: true }]);
-parsingList.push([remarkSmartypants, {}]);
 parsingList.push([remarkFootnotes, {}]);
-// parsingList.push([DebugParser, {}]);
-// parsingList.push([remarkGfm, {}]);
 const processingList = getDefaultEuiMarkdownProcessingPlugins();
 
 processingList[1][1].components.checkboxplugin =
@@ -75,9 +74,15 @@ function doubleKbd(props) {
         </kbd>
     );
 }
+
+// replace EuiCode with transparent wrapper that looks less ugly
+function customCode(props) {
+    return <EuiCode {...props} />;
+}
 processingList[1][1].components.kbd = doubleKbd;
 
-processingList.splice(processingList.length - 1, 0, [rehypeRaw]);
+// this lets users put raw HTML in
+processingList.splice(1, 0, [rehypeRaw]);
 
 // console.log(parsingList);
 // @ts-ignore
@@ -86,6 +91,7 @@ processingList.splice(processingList.length - 1, 0, [rehypeRaw]);
 // console.log(processingList);
 
 export default function TextPanel(props) {
+    useEffect(renderFootnoteBlock);
     return (
         <EuiPanel
             hasShadow={false}
@@ -109,6 +115,7 @@ export default function TextPanel(props) {
                             parsingPluginList={parsingList}
                             processingPluginList={processingList}
                             id="textContent"
+                            className="eui-fullHeight"
                             grow
                         >
                             {props.content}

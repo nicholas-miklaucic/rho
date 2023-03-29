@@ -1,7 +1,6 @@
 // @ts-nocheck
 
 import {
-    EuiCodeBlock,
     EuiLoadingChart,
     EuiTabbedContent,
     useEuiFontSize,
@@ -15,6 +14,7 @@ import Script from "next/script";
 import { useState } from "react";
 import rhoLight from "../../../public/plotly_rho_light.json";
 import rhoDark from "../../../public/plotly_rho_dark.json";
+import SrcBlock from "./src_block";
 
 export default function PlotlyPanel(props) {
     const { fig, code } = props;
@@ -63,25 +63,15 @@ export default function PlotlyPanel(props) {
             name: "Code",
             className: "eui-fullHeight",
             content: (
-                <EuiCodeBlock
-                    language="python"
-                    lineNumbers
-                    overflowHeight="100%"
-                    fontSize="m"
-                    paddingSize="m"
-                    isCopyable={true}
-                    isVirtualized
-                    className="codeBlockEmbed"
-                >
+                <SrcBlock>
                     {code}
-                </EuiCodeBlock>
+                </SrcBlock>
             ),
         },
     ];
 
     return (
         <>
-            <Script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG" />
             <EuiTabbedContent
                 tabs={tabs}
                 initialSelectedTab={tabs[0]}

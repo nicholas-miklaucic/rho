@@ -24,6 +24,7 @@ import Head from "next/head";
 import ThemeSwitcher from "../components/rho/theme_switcher";
 import Shortcuts from "../components/hotkeys";
 import indexStyles from "../styles/index.styles";
+import { css } from "@emotion/css";
 const theme = themes[process.env.CONSTELLATE_THEME];
 
 function findImage(constellation: Constellation, colorMode: string, styles) {
@@ -50,22 +51,13 @@ function findImage(constellation: Constellation, colorMode: string, styles) {
     return (
       <EuiImage
         size="fullWidth"
-        url="https://www.nasa.gov/sites/default/files/thumbnails/image/crab-nebula-mosaic.jpg"
-        alt="Crab nebula"
+        url="https://upload.wikimedia.org/wikipedia/commons/c/c1/The_Reflection_Nebula_in_Orion.jpg"
+        alt="Nebula in a constellation"
+        title="NASA; Public Domain; via Wikimedia Commons"
       />
     );
   } else {
-    return (
-      <Image
-        css={styles.cardImg}
-        src={url}
-        alt={constellation.title}
-        width="100%"
-        height="100%"
-        layout="responsive"
-        objectFit="cover"
-      />
-    );
+    return <EuiImage size="fullWidth" url={url} alt={constellation.title} />;
   }
 }
 
@@ -98,40 +90,38 @@ function IndexPage({ constellations }) {
         <title>{theme.site_title}</title>
       </Head>
 
-      <EuiPageTemplate
-        paddingSize="none"
-        template="empty"
-        fullHeight={true}
-        restrictWidth={false}
-        className="page-grow"
-      >
-        <EuiHeader position="fixed">
-          <EuiHeaderSection side="left">
-            <EuiHeaderSectionItem>
-              <EuiHeaderLogo iconType={theme["site_logo"]}>
-                {theme["site_title"]}
-              </EuiHeaderLogo>
-            </EuiHeaderSectionItem>
-          </EuiHeaderSection>
-          <EuiHeaderSection side="right">
-            <EuiHeaderSectionItem>
-              <ThemeSwitcher key="theme-switcher" />
-            </EuiHeaderSectionItem>
-          </EuiHeaderSection>
-        </EuiHeader>
-        <EuiFlexGrid columns={4} css={styles.grid}>
-          {Object.entries(constellations).map(([slug, constellation]) => {
-            return (
-              <EuiFlexItem key={slug}>
-                <ConstellationCard
-                  constellation={constellation}
-                  styles={styles}
-                />
-              </EuiFlexItem>
-            );
-          })}
-        </EuiFlexGrid>
-      </EuiPageTemplate>
+      <EuiFlexGroup>
+        <EuiPageTemplate paddingSize="none" grow restrictWidth={false}>
+          <EuiPageTemplate.Header
+            iconType={() => (
+              <Image
+                src={theme["site_logo"]}
+                width={32}
+                height={32}
+                alt="Logo"
+              />
+            )}
+            pageTitle={theme["site_title"]}
+            pageTitleProps={{ id: "essay-title" }}
+            paddingSize="m"
+            bottomBorder={false}
+            rightSideItems={[<ThemeSwitcher key="theme-switcher" />]}
+            id="pageHeader"
+          />
+          <EuiFlexGrid columns={4} css={styles.grid}>
+            {Object.entries(constellations).map(([slug, constellation]) => {
+              return (
+                <EuiFlexItem key={slug}>
+                  <ConstellationCard
+                    constellation={constellation}
+                    styles={styles}
+                  />
+                </EuiFlexItem>
+              );
+            })}
+          </EuiFlexGrid>
+        </EuiPageTemplate>
+      </EuiFlexGroup>
     </>
   );
 }

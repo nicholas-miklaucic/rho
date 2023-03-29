@@ -1,27 +1,25 @@
-import {
-  EuiCodeBlock,
-  EuiFlexGroup,
-  EuiFlexItem,
-  EuiTabbedContent,
-} from '@elastic/eui';
+import { EuiFlexGroup, EuiFlexItem, EuiTabbedContent } from "@elastic/eui";
 
-import Image from 'next/image';
+import Image from "next/legacy/image";
+import SrcBlock from "./src_block";
 
 export default function ImagePanel(props) {
   const { url, code } = props;
   // const { euiTheme, colorMode } = useEuiTheme();
   const tabs = [
     {
-      id: 'img',
-      name: 'Plot',
+      id: "img",
+      name: "Plot",
       content: (
         <EuiFlexGroup
           justifyContent="center"
           direction="column"
-          className="eui-fullHeight">
+          className="eui-fullHeight"
+        >
           <EuiFlexItem grow={false} className="eui-fullHeight">
             <div
-              style={{ width: '100%', height: '100%', position: 'relative' }}>
+              style={{ width: "100%", height: "100%", position: "relative" }}
+            >
               <Image src={url} layout="fill" alt="plot" objectFit="contain" />
             </div>
           </EuiFlexItem>
@@ -29,22 +27,10 @@ export default function ImagePanel(props) {
       ),
     },
     {
-      id: 'code',
-      name: 'Code',
-      className: 'eui-fullHeight',
-      content: (
-        <EuiCodeBlock
-          language="python"
-          lineNumbers
-          overflowHeight="100%"
-          fontSize="m"
-          paddingSize="m"
-          isCopyable={true}
-          isVirtualized
-          className="codeBlockEmbed">
-          {code}
-        </EuiCodeBlock>
-      ),
+      id: "code",
+      name: "Code",
+      className: "eui-fullHeight",
+      content: <SrcBlock>{code}</SrcBlock>,
     },
   ];
 
